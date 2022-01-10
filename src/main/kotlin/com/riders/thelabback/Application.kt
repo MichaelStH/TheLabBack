@@ -1,12 +1,12 @@
 package com.riders.thelabback
 
+import com.riders.thelabback.data.model.order.registerOrderRoutes
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
-import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.serialization.json.Json
 
@@ -29,24 +29,25 @@ fun Application.module(testing: Boolean = true) {
         println("Listening on port $port")
     }
 
-    embeddedServer(Netty, host = "192.168.0.48", port = 8100) {
 
-        // Json Content Negotiation
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-            })
+    // Json Content Negotiation
+    install(ContentNegotiation) {
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+        })
+    }
+
+    registerOrderRoutes()
+
+    routing {
+        get("") {
+            call.respondText("Hello, world!", contentType = ContentType.Text.Plain)
         }
 
-        routing {
-            get("") {
-                call.respondText("Hello, world!", contentType = ContentType.Text.Plain)
-            }
-
-            get("/about") {
-                call.respondText("About - Author MichaelStH", contentType = ContentType.Text.Plain)
-            }
+        get("/about") {
+            call.respondText("About - Author MichaelStH", contentType = ContentType.Text.Plain)
         }
-    }.start(wait = true)
+    }
+
 }
