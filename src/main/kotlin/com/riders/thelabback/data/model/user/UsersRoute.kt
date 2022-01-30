@@ -10,45 +10,26 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
 
-
 val users = mutableListOf(
     User(
-        "Male",
         "Michael",
         "Lawrence",
         "mike@test.fr",
-        "test",
-        "+33645789312",
-        "20/08/1993",
-        isPremium = true,
-        isCustomer = true,
-        isProvider = false,
+        "test_mike",
         encodedHashedPassword(convertToSHA1("test_mike")!!)
     ),
     User(
-        "Female",
         "Jane",
         "Doe",
         "janedoe@test.fr",
         "test",
-        "+33645789312",
-        "01/08/1991",
-        isPremium = true,
-        isCustomer = true,
-        isProvider = false,
         encodedHashedPassword(convertToSHA1("test")!!)
     ),
     User(
-        "Male",
         "John",
         "Smith",
         "johnsmith@test.fr",
-        "test",
-        "+33645789312",
-        "25/02/1988",
-        isPremium = true,
-        isCustomer = true,
-        isProvider = false,
+        "johnSmith_45",
         encodedHashedPassword(convertToSHA1("johnSmith_45")!!)
     )
 )
@@ -171,7 +152,7 @@ fun convertToSHA1(password: String): ByteArray? {
     try {
         // Convert to SHA-1
         val digest: MessageDigest = MessageDigest.getInstance("SHA-1")
-        val textByteArray: ByteArray = "${password}_prater_data".toByteArray(charset("iso-8859-1"))
+        val textByteArray: ByteArray = "${password}_the_lab_data".toByteArray(charset("iso-8859-1"))
 
         digest.update(textByteArray, 0, textByteArray.size)
 

@@ -1,6 +1,9 @@
 package com.riders.thelabback
 
+import com.riders.thelabback.data.model.api.ApiResponse
+import com.riders.thelabback.data.model.login.registerLoginRoute
 import com.riders.thelabback.data.model.order.registerOrderRoutes
+import com.riders.thelabback.data.model.user.registerUsersRoute
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -38,11 +41,19 @@ fun Application.module(testing: Boolean = true) {
         })
     }
 
+    registerUsersRoute()
+    registerLoginRoute()
     registerOrderRoutes()
 
     routing {
-        get("") {
-            call.respondText("Hello, world!", contentType = ContentType.Text.Plain)
+        get("/") {
+//            call.respondText("Hello, world!", contentType = ContentType.Text.Plain)
+            call.respond(HttpStatusCode.OK, ApiResponse("Hello World!", HttpStatusCode.OK.value))
+        }
+
+        get("/connect") {
+//            call.respondText("Hello, world!", contentType = ContentType.Text.Plain)
+            call.respond(HttpStatusCode.OK, ApiResponse("TheLabBack Api is live", HttpStatusCode.OK.value))
         }
 
         get("/about") {
