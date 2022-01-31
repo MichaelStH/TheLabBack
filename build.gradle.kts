@@ -66,3 +66,8 @@ tasks.withType<KotlinCompile> {
 application {
     mainClass.set("com.riders.thelabback.ApplicationKt")
 }
+
+// Heroku
+tasks.create("stage") {
+    dependsOn("installDist")
+}
