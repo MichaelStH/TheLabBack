@@ -1,1 +1,1 @@
-./build/install/TheLabBack/bin/TheLabBack
+web: ./build/install/TheLabBack/bin/TheLabBack
