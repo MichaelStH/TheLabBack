@@ -1,10 +1,11 @@
 package com.riders.thelabback.data.model.user
 
-import io.ktor.application.*
+
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -56,8 +57,8 @@ fun Route.addUserRoute() {
             println("ERROR - Password MUST NOT be null \n")
 
             call.respond(
-                HttpStatusCode.Unauthorized,
-                UserResponse(
+                status = HttpStatusCode.Unauthorized,
+                message = UserResponse(
                     HttpStatusCode.Unauthorized.value,
                     " Password MUST NOT be null",
                     ""
@@ -94,8 +95,8 @@ fun Route.addUserRoute() {
             users.add(user)
 
             call.respond(
-                HttpStatusCode.Created,
-                UserResponse(
+                status = HttpStatusCode.Created,
+                message = UserResponse(
                     HttpStatusCode.Created.value,
                     "User saved",
                     token!!
