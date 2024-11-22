@@ -1,13 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "1.6.7"
-val kotlinVersion = "2.0.21"
-val logbackVersion = "1.2.9"
-val exposedVersion = "0.36.1"
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktor)
 
     application
 }
