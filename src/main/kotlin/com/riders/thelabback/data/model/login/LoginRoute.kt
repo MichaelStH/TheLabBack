@@ -3,11 +3,11 @@ package com.riders.thelabback.data.model.login
 import com.riders.thelabback.data.model.api.ApiResponse
 import com.riders.thelabback.data.model.user.User
 import com.riders.thelabback.data.model.user.users
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 
 fun Application.registerLoginRoute() {
@@ -26,8 +26,8 @@ fun Route.loginRoute() {
 
         if (user.email?.isBlank() == true || user.password?.isBlank() == true) {
             return@post call.respond(
-                HttpStatusCode.BadRequest,
-                ApiResponse(
+                status = HttpStatusCode.BadRequest,
+                message = ApiResponse(
                     "Email or password is empty. Please verify that you've entered a correct email or password",
                     HttpStatusCode.BadRequest.value
                 )
@@ -36,15 +36,15 @@ fun Route.loginRoute() {
 
         if (null == users.find { it.email == user.email }) {
             return@post call.respond(
-                HttpStatusCode.NotFound,
-                ApiResponse("No user found with this name ${user.email}", HttpStatusCode.NotFound.value)
+                status = HttpStatusCode.NotFound,
+                message = ApiResponse("No user found with this name ${user.email}", HttpStatusCode.NotFound.value)
             )
         }
 
         if (null == user.token) {
             call.respond(
-                HttpStatusCode.NotFound,
-                ApiResponse("password is incorrect", HttpStatusCode.NotFound.value)
+                status = HttpStatusCode.NotFound,
+                message = ApiResponse("password is incorrect", HttpStatusCode.NotFound.value)
             )
         } else {
 
@@ -54,8 +54,8 @@ fun Route.loginRoute() {
                 println("User logging is okay")
 
                 call.respond(
-                    HttpStatusCode.OK,
-                    ApiResponse(
+                    status = HttpStatusCode.OK,
+                    message = ApiResponse(
                         "Login okay",
                         HttpStatusCode.OK.value,
                         users.find { it.email == user.email }!!.token
@@ -63,8 +63,8 @@ fun Route.loginRoute() {
                 )
             } else {
                 call.respond(
-                    HttpStatusCode.NotFound,
-                    ApiResponse(
+                    status = HttpStatusCode.NotFound,
+                    message = ApiResponse(
                         "Password is invalid",
                         HttpStatusCode.NotFound.value,
                         ""
