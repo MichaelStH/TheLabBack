@@ -1,9 +1,9 @@
 package com.riders.thelabback.data.model.order
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 val orderStorage = listOf(
     Order(
@@ -28,7 +28,7 @@ val orderStorage = listOf(
 fun Route.listOrdersRoute() {
     get("/order") {
         if (orderStorage.isNotEmpty()) {
-            call.respond(orderStorage)
+            call.respond(status = HttpStatusCode.OK, message = orderStorage)
         } else {
             call.respond(HttpStatusCode.NotFound, "No item found")
         }
@@ -53,7 +53,7 @@ fun Route.totalizeOrderRoute() {
             "Not Found",
             status = HttpStatusCode.NotFound
         )
-        val total = order.contents.map { it.price * it.amount }.sum()
+        val total = order.contents.sumOf { it.price * it.amount }
         call.respond(total)
     }
 }
