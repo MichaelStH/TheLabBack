@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktorVersion = "1.6.7"
-val kotlinVersion = "1.6.0"
+val kotlinVersion = "2.0.21"
 val logbackVersion = "1.2.9"
 val exposedVersion = "0.36.1"
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 
     application
 }
@@ -17,6 +17,16 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+kotlin {
+    jvmToolchain(17)
+
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
 }
 
 dependencies {
@@ -60,11 +70,14 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 application {
     mainClass.set("com.riders.thelabback.ApplicationKt")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 // Heroku
