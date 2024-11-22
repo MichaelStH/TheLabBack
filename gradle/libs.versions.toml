@@ -6,7 +6,7 @@
 [versions]
 # Expose Database
 exposed = "0.37.3"
-h2Database ="2.2.220"
+h2Database = "2.2.220"
 # Kotlin
 kotlin = "2.0.21"
 kotlinxCoroutines = "1.7.2"

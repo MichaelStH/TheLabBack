@@ -30,39 +30,46 @@ kotlin {
 }
 
 dependencies {
+    ///////////////////////////////////////////////////////
+    //
+    // GENERAL DEPENDENCIES
+    //
+    ///////////////////////////////////////////////////////
+    // Exposed
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    runtimeOnly(libs.postgresql)
+    // H2 Database
+    implementation(libs.h2)
+
+    // Kotlin standard lib
     implementation(kotlin("stdlib"))
+    implementation(platform(libs.kotlin.bom))
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+    // Ktor
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.call.logging)
+    implementation(libs.ktor.server.config.yaml)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.host.common)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.serialization.xml)
 
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation(libs.logback)
 
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
-
-    implementation("io.ktor:ktor-auth:$ktorVersion")
-    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-auth:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-java:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-gson:$ktorVersion")
-    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
-
-    implementation("io.ktor:ktor-serialization:$ktorVersion")
-
-    implementation("com.h2database:h2:2.0.202")
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-
+    ///////////////////////////////////////////////////////
+    //
+    // TESTS
+    //
+    ///////////////////////////////////////////////////////
     testImplementation(kotlin("test"))
-    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.kotlin.test.junit)
 }
 
 tasks.test {
