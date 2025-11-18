@@ -46,24 +46,34 @@ dependencies {
     // H2 Database
     implementation(libs.h2)
 
-    // Kotlin standard lib
-    implementation(kotlin("stdlib"))
+    // Kotlin
     implementation(platform(libs.kotlin.bom))
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
+    implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
 
     // Ktor
+    implementation(platform(libs.ktor.bom))
+    implementation(libs.ktor.http)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.serialization.jvm)
+    implementation(libs.ktor.serialization.xml)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.call.logging)
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.ktor.server.host.common)
-    implementation(libs.ktor.serialization)
-    implementation(libs.ktor.serialization.json)
-    implementation(libs.ktor.serialization.xml)
+    implementation(libs.ktor.utils)
 
     implementation(libs.logback)
+
+    // Kotools Types : incompatible with Serialization 1.9.0
+    // implementation(libs.types)
 
     // Arbor Logging
     implementation(libs.arbor)
