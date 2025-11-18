@@ -8,8 +8,5 @@ data class ApiResponse(
     val code: Int,
     val token: String? = null
 ) {
-    constructor(
-        message: String,
-        code: Int
-    ) : this(message, code, null)
+    constructor(message: String, code: Int) : this(message, code, null)
 }
