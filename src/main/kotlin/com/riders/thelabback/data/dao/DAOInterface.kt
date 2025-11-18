@@ -1,5 +1,4 @@
-package com.riders.thelabback.data.local.database.dao
-
+package com.riders.thelabback.data.dao
 
 import com.riders.thelabback.data.model.user.User
 import org.jetbrains.exposed.sql.Table
@@ -16,7 +15,7 @@ interface DAOInterface : Closeable {
     /**
      * Initializes the database with the specified tables.
      * This should be called to create the database schema if it doesn't exist.
-     * @param T The type of the table, which must extend [org.jetbrains.exposed.sql.Table].
+     * @param T The type of the table, which must extend [Table].
      * @param tables A vararg of table objects to be created in the database.
      */
     fun <T : Table> init(vararg tables: T)

@@ -1,41 +1,53 @@
 package com.riders.thelabback.data.model.user
 
-
+import com.riders.thelabback.core.logs.Timber
+import com.riders.thelabback.core.utils.Utils.convertToSHA1
+import com.riders.thelabback.core.utils.Utils.encodedHashedPassword
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.io.UnsupportedEncodingException
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import kotlin.experimental.and
 
-val users = mutableListOf(
+/**
+ * A temporary in-memory list of users for demonstration purposes.
+ * In a production environment, this should be replaced with a persistent data source
+ * like a database accessed via a DAO.
+ *
+ * @warning This list stores user passwords as hashes in the `token` field for demonstration,
+ * which is not a recommended practice. The `password` field itself contains plaintext,
+ * which is a major security risk. This is for prototyping only.
+ */
+val users: MutableList<User> = mutableListOf(
     User(
         "Michael",
         "Lawrence",
         "mike@test.fr",
-        "test_mike",
-        encodedHashedPassword(convertToSHA1("test_mike")!!)
+        // The plaintext password should not be stored. Here it's hashed and put in the token field.
+        "test_mike".convertToSHA1()!!.encodedHashedPassword(),
+        "test_mike".convertToSHA1()!!.encodedHashedPassword()
     ),
     User(
         "Jane",
         "Doe",
         "janedoe@test.fr",
         "test",
-        encodedHashedPassword(convertToSHA1("test")!!)
+        "test".convertToSHA1()!!.encodedHashedPassword() // Mismatch: password is "test", token is hash of "test"
     ),
     User(
         "John",
         "Smith",
         "johnsmith@test.fr",
         "johnSmith_45",
-        encodedHashedPassword(convertToSHA1("johnSmith_45")!!)
+        "johnSmith_45".convertToSHA1()!!.encodedHashedPassword()
     )
 )
 
-
+/**
+ * Registers all user-related routes under the `/users` path.
+ * This function acts as a container for organizing all endpoints that manage users.
+ * @receiver The Ktor [Application] to which the routes will be added.
+ */
 fun Application.registerUsersRoute() {
     routing {
         route("/users") {
@@ -47,91 +59,116 @@ fun Application.registerUsersRoute() {
     }
 }
 
-
+/**
+ * Defines the `POST /users` route for creating a new user.
+ * It receives a [User] object, validates the password, hashes it, and adds the user
+ * to the in-memory list.
+ *
+ * @receiver The Ktor [Route] to which this endpoint will be added.
+ */
 fun Route.addUserRoute() {
     post {
-        val user = call.receive<User>()
-        print("received : $user \n")
+        val userRequest = call.receive<User>()
+        Timber.i("Received user creation request: $userRequest")
 
-        if (user.password.isNullOrBlank()) {
-            println("ERROR - Password MUST NOT be null \n")
-
-            call.respond(
+        val password = userRequest.password
+        if (password.isNullOrBlank()) {
+            Timber.w("User creation failed: Password was null or blank.")
+            return@post call.respond(
                 status = HttpStatusCode.Unauthorized,
                 message = UserResponse(
                     HttpStatusCode.Unauthorized.value,
-                    " Password MUST NOT be null",
+                    "Password must not be empty.",
                     ""
                 )
             )
-        } else {
+        }
 
-            var token: String? = ""
+        // Hash the password for storage. The plaintext password should never be stored.
+        val hashedPassword = password.convertToSHA1()?.encodedHashedPassword()
 
-            try {
-                // Convert to SHA-1
-                val sha1hash: ByteArray? = convertToSHA1(user.password!!)
-
-                if (null == sha1hash) {
-                    println("Failed to convert to SHA-1")
-                    return@post
-                }
-
-                // Encode hashed password
-                token = encodedHashedPassword(sha1hash)
-
-                println("generated token : $token \n")
-
-                // Apply token to current user
-                user.token = token
-
-            } catch (exception: NoSuchAlgorithmException) {
-                exception.printStackTrace()
-            } catch (ex: UnsupportedEncodingException) {
-                ex.printStackTrace()
-            }
-
-            // Add user to list (or database table)
-            users.add(user)
-
-            call.respond(
-                status = HttpStatusCode.Created,
+        if (hashedPassword == null) {
+            Timber.e("Password hashing failed. SHA-1 algorithm might not be available.")
+            return@post call.respond(
+                status = HttpStatusCode.InternalServerError,
                 message = UserResponse(
-                    HttpStatusCode.Created.value,
-                    "User saved",
-                    token!!
+                    HttpStatusCode.InternalServerError.value,
+                    "Failed to process user registration due to a server error.",
+                    ""
                 )
             )
         }
 
+        // Create a new User object for storage, replacing the plaintext password with the hash.
+        // The 'token' field should be used for session tokens (e.g., JWT), not the password hash.
+        val newUser = userRequest.copy(
+            password = hashedPassword,
+            token = "" // A real session token would be generated upon login, not registration.
+        )
+
+        // Add user to list (or database table)
+        users.add(newUser)
+        Timber.i("User successfully created and stored: $newUser")
+
+        call.respond(
+            status = HttpStatusCode.Created,
+            message = UserResponse(
+                HttpStatusCode.Created.value,
+                "User created successfully.",
+                // Do not send the password hash back. A session token would go here after login.
+                ""
+            )
+        )
     }
 }
 
-
+/**
+ * Defines the `GET /users` route for retrieving all users.
+ *
+ * @receiver The Ktor [Route] to which this endpoint will be added.
+ * @warning This implementation returns all user data, including hashed passwords.
+ * In a production application, you must filter out sensitive data or use a DTO (Data Transfer Object).
+ */
 fun Route.getUsersRoute() {
-    get {
-        if (users.isNotEmpty()) {
-            call.respond(HttpStatusCode.OK, users)
-        } else {
+    get("/") {
+        if (users.isEmpty()) {
             call.respond(HttpStatusCode.NotFound, "No user found")
+        } else {
+            // SECURITY: Never send the full user object with password/token data to the client.
+            // This should be mapped to a public-facing data class.
+            call.respond(HttpStatusCode.OK, users)
         }
     }
 }
 
+/**
+ * Defines the `GET /users/{id}` route for retrieving a single user by their ID.
+ *
+ * @receiver The Ktor [Route] to which this endpoint will be added.
+ * @warning As with `getUsersRoute`, this sends sensitive data and should be refactored to use a DTO.
+ */
 fun Route.getUserRoute() {
     get("{id}") {
         val id = call.parameters["id"]?.toInt() ?: return@get call.respondText(
             "Missing or malformed id",
             status = HttpStatusCode.BadRequest
         )
+
         val user = users.find { it.id == id }
-        user?.let { call.respond(HttpStatusCode.Found, it) } ?: return@get call.respond(
-            HttpStatusCode.NotFound,
-            "No user found with this id $id"
-        )
+
+        if (null == user) {
+            call.respond(HttpStatusCode.NotFound, "No user found with this id $id")
+        } else {
+            // SECURITY: Map to a DTO before sending.
+            call.respond(HttpStatusCode.OK, user)
+        }
     }
 }
 
+/**
+ * Defines the `DELETE /users/{id}` route for deleting a user by their ID.
+ * @receiver The Ktor [Route] to which this endpoint will be added.
+ */
 fun Route.deleteUserRoute() {
     delete("{id}") {
         val id =
@@ -146,45 +183,4 @@ fun Route.deleteUserRoute() {
             call.respond(HttpStatusCode.NotFound, "No user found with this id $id")
         }
     }
-}
-
-
-fun convertToSHA1(password: String): ByteArray? {
-    try {
-        // Convert to SHA-1
-        val digest: MessageDigest = MessageDigest.getInstance("SHA-1")
-        val textByteArray: ByteArray = "${password}_the_lab_data".toByteArray(charset("iso-8859-1"))
-
-        digest.update(textByteArray, 0, textByteArray.size)
-
-        return digest.digest()
-
-    } catch (exception: NoSuchAlgorithmException) {
-        exception.printStackTrace()
-    } catch (ex: UnsupportedEncodingException) {
-        ex.printStackTrace()
-    }
-
-    return null
-}
-
-fun encodedHashedPassword(sha1hash: ByteArray): String? {
-    try {
-        val sb = StringBuilder()
-        for (b in sha1hash) {
-            var halfByte: Int = b.toInt() ushr 4 and 0x0F
-            var twoHalfs: Int = 0
-
-            do {
-                sb.append(
-                    if (halfByte in 0..9) ('0'.code + halfByte).toChar() else ('0'.code + (halfByte + 10)).toChar()
-                )
-                halfByte = (b and 0x0F).toInt()
-            } while (twoHalfs++ < 1)
-        }
-        return sb.toString()
-    } catch (ex: Exception) {
-        ex.printStackTrace()
-    }
-    return null
 }

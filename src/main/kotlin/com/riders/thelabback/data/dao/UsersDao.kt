@@ -1,4 +1,4 @@
-package com.riders.thelabback.data.local.database.dao
+package com.riders.thelabback.data.dao
 
 import com.riders.thelabback.core.logs.Timber
 import com.riders.thelabback.data.model.user.User
