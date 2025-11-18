@@ -25,6 +25,13 @@ kotlin {
     }
 }
 
+application {
+    mainClass.set("com.riders.thelabback.ApplicationKt")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
 dependencies {
     ///////////////////////////////////////////////////////
     //
@@ -70,17 +77,6 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
-}
-
-application {
-    mainClass.set("com.riders.thelabback.ApplicationKt")
-
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 // Heroku
