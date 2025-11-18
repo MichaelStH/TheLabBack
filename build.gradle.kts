@@ -65,6 +65,9 @@ dependencies {
 
     implementation(libs.logback)
 
+    // Arbor Logging
+    implementation(libs.arbor)
+
     ///////////////////////////////////////////////////////
     //
     // TESTS

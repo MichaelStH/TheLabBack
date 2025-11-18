@@ -5,7 +5,7 @@
 
 [versions]
 # Arbor
-arbor = "1.40.88"
+arbor = "2.0.103"
 # Compose
 compose = "1.10"
 # Expose Database
