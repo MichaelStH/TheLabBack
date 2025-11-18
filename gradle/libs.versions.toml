@@ -4,25 +4,29 @@
 #################
 
 [versions]
-# Expose Database
-exposed = "0.37.3"
-h2Database = "2.2.220"
-# Kotlin
-kotlin = "2.0.21"
-kotlinxCoroutines = "1.7.2"
-kotlinxSerializationJson = "1.7.2"
-# Ktor
-ktor = "3.0.1"
-logback = "1.4.14"
-postgreSQL = "42.7.2"
-# Zxing
-zxing = "3.5.2"
 # Arbor
-arbor = "1.40.86"
+arbor = "1.40.88"
+# Compose
+compose = "1.10"
+# Expose Database
+exposed = "0.52.0"
+h2Database = "2.2.224"
+# Kotlin
+kotlin = "2.2.21"
+kotlinxCoroutines = "1.10.2"
+kotlinxSerializationJson = "1.9.0"
+# Ktor
+ktor = "3.3.2"
+logback = "1.5.13"
+postgreSQL = "42.7.3"
+# Zxing
+zxing = "3.5.3"
 
 
 [libraries]
 # placeholder: lib-name = { group = "", name = "", version.ref = "" }
+# Arbor
+arbor = { group = "com.ToxicBakery.logging", name = "arbor-jvm", version.ref = "arbor" }
 # Exposed
 exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
 exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
@@ -55,8 +59,6 @@ postgresql = { module = "org.postgresql:postgresql", version.ref = "postgreSQL" 
 # zxing
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 zxing-javase = { group = "com.google.zxing", name = "javase", version.ref = "zxing" }
-# Arbor
-arbor = { group = "com.ToxicBakery.logging", name = "arbor-jvm", version.ref = "arbor" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
