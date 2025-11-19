@@ -1,4 +1,4 @@
-package com.riders.thelabback.data.dao
+package com.riders.thelabback.data.database.dao
 
 import com.riders.thelabback.data.model.user.User
 import org.jetbrains.exposed.sql.Table
@@ -26,20 +26,20 @@ interface DAOInterface : Closeable {
      * @param lastName The last name of the user.
      * @return An [InsertStatement] which can be used to retrieve the generated ID of the new user.
      */
-    fun createUser(firstName: String, lastName: String): InsertStatement<Number>
+    suspend fun createUser(firstName: String, lastName: String): InsertStatement<Number>
 
     /**
      * Retrieves all users from the database.
      * @return A [List] of all [User] objects.
      */
-    fun getAllUsers(): List<User>
+    suspend fun getAllUsers(): List<User>
 
     /**
      * Retrieves a single user by their unique ID.
      * @param id The ID of the user to retrieve.
      * @return The [User] object if found, otherwise `null`.
      */
-    fun getUser(id: Int): User?
+    suspend fun getUser(id: Int): User?
 
     /**
      * Updates an existing user's information.
@@ -48,12 +48,12 @@ interface DAOInterface : Closeable {
      * @param lastName The new last name for the user.
      * @return The number of rows affected by the update operation.
      */
-    fun updateUser(id: Int, firstName: String, lastName: String): Int
+    suspend fun updateUser(id: Int, firstName: String, lastName: String): Int
 
     /**
      * Deletes a user from the database.
      * @param id The ID of the user to delete.
      * @return The number of rows affected by the delete operation.
      */
-    fun deleteUser(id: Int): Int
+    suspend fun deleteUser(id: Int): Int
 }
