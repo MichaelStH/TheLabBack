@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.ksp)
 
     application
 }
@@ -40,6 +41,16 @@ dependencies {
     // H2 Database
     implementation(libs.h2)
 
+    // Koin
+    implementation(platform(libs.koin.bom))
+    ksp(libs.koin.ksp.compiler)
+    implementation(libs.koin.core)
+    implementation(libs.koin.core.coroutines)
+    implementation(libs.koin.ktor)
+    implementation(libs.koin.logger)
+    implementation(platform(libs.koin.annotations.bom))
+    implementation(libs.koin.annotations)
+
     // Kotlin
     implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
@@ -61,7 +72,7 @@ dependencies {
     implementation(libs.ktor.server.call.logging)
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.server.content.negotiation)
-    implementation(libs.ktor.server.di)
+//    implementation(libs.ktor.server.di)
     implementation(libs.ktor.server.host.common)
     implementation(libs.ktor.utils)
 
@@ -79,8 +90,12 @@ dependencies {
     //
     ///////////////////////////////////////////////////////
     testImplementation(kotlin("test"))
-    testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit5)
+
+    testImplementation(libs.ktor.server.test.host)
 }
 
 tasks.test {

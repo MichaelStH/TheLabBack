@@ -11,13 +11,18 @@ compose = "1.10"
 # Expose Database
 exposed = "0.52.0"
 h2Database = "2.2.224"
+# Koin
+koin = "4.1.1"
+koinAnnotations = "2.3.0"
 # Kotlin
 kotlin = "2.2.21"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerializationJson = "1.9.0"
+ksp = "2.2.21-2.0.4"
 # Ktor
 ktor = "3.3.2"
 logback = "1.5.13"
+sLog4j = "0.0.1"
 postgreSQL = "42.7.3"
 types = "5.1.0"
 # Zxing
@@ -35,6 +40,27 @@ exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version
 # H2
 h2 = { module = "com.h2database:h2", version.ref = "h2Database" }
 # Koin
+koin-annotations-bom = { group = "io.insert-koin", name = "koin-annotations-bom", version.ref = "koinAnnotations" }
+koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koinAnnotations" }
+koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinAnnotations" }
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-androidx-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation" }
+koin-androidx-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
+koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-compose-navigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation" }
+koin-compose-viewmodel-navigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines" }
+koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor" }
+koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j" }
+koin-test = { group = "io.insert-koin", name = "koin-test" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4" }
+koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5" }
+
 # Kotlin
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
@@ -63,7 +89,11 @@ ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host-jvm" }
 ktor-utils = { group = "io.ktor", name = "ktor-utils", version.ref = "ktor" }
+# Logback
+logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+# Log4J
+sl4j-api = { group = "org.sl4j", name = "sl4j-api", version.ref = "sLog4j" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgreSQL" }
 # Kotools Types
 types = { group = "org.kotools", name = "types", version.ref = "types" }
@@ -75,3 +105,4 @@ zxing-javase = { group = "com.google.zxing", name = "javase", version.ref = "zxi
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
