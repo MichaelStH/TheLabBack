@@ -15,16 +15,16 @@ const val MAX_VARCHAR_LENGTH: Int = 128
  */
 object Users : Table("users") {
     /** The unique identifier for the user, auto-incrementing. */
-    val id = integer("id").autoIncrement()
+    val id = integer(name = "id").autoIncrement()
 
     /** The user's first name. */
-    val firstName = varchar("firstName", length = 50)
+    val firstName = varchar(name = "firstName", length = 50)
 
     /** The user's last name. */
-    val lastName = varchar("lastName", length = 50)
+    val lastName = varchar(name = "lastName", length = 50)
 
     /** The user's unique email address. */
-    val email = varchar("email", length = MAX_VARCHAR_LENGTH)
+    val email = varchar(name = "email", length = MAX_VARCHAR_LENGTH)
 
     /**
      * The user's hashed password.
@@ -32,17 +32,17 @@ object Users : Table("users") {
      * Argon2 or bcrypt. For example, a bcrypt hash is typically 60 characters.
      * The length should be increased to at least 60, or preferably 255, to accommodate secure hashes.
      */
-    val password = varchar("password", length = 50)
+    val password = varchar(name = "password", length = 50)
 
     /**
      * A security or session token associated with the user.
      * @warning The length of 50 may be insufficient for certain token types, like JWTs,
      * which can be much longer. Consider increasing the length if longer tokens will be stored.
      */
-    val token = varchar("token", length = 50)
+    val token = varchar(name = "token", length = 50)
 
     /** Defines the primary key for the `users` table, which is the `id` column. */
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
+    override val primaryKey = PrimaryKey(firstColumn = id, name = "PK_User_ID")
 }
 
 /**

@@ -3,45 +3,17 @@ package com.riders.thelabback.data.model.user
 import com.riders.thelabback.core.logs.Timber
 import com.riders.thelabback.core.utils.Utils.convertToSHA1
 import com.riders.thelabback.core.utils.Utils.encodedHashedPassword
+import com.riders.thelabback.core.utils.users
+import com.riders.thelabback.data.repositories.UserRepository
+import com.riders.thelabback.data.repositories.UserRepositoryImpl
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.flow.first
+import org.koin.ktor.ext.inject
 
-/**
- * A temporary in-memory list of users for demonstration purposes.
- * In a production environment, this should be replaced with a persistent data source
- * like a database accessed via a DAO.
- *
- * @warning This list stores user passwords as hashes in the `token` field for demonstration,
- * which is not a recommended practice. The `password` field itself contains plaintext,
- * which is a major security risk. This is for prototyping only.
- */
-val users: MutableList<User> = mutableListOf(
-    User(
-        "Michael",
-        "Lawrence",
-        "mike@test.fr",
-        // The plaintext password should not be stored. Here it's hashed and put in the token field.
-        "test_mike".convertToSHA1()!!.encodedHashedPassword(),
-        "test_mike".convertToSHA1()!!.encodedHashedPassword()
-    ),
-    User(
-        "Jane",
-        "Doe",
-        "janedoe@test.fr",
-        "test",
-        "test".convertToSHA1()!!.encodedHashedPassword() // Mismatch: password is "test", token is hash of "test"
-    ),
-    User(
-        "John",
-        "Smith",
-        "johnsmith@test.fr",
-        "johnSmith_45",
-        "johnSmith_45".convertToSHA1()!!.encodedHashedPassword()
-    )
-)
 
 /**
  * Registers all user-related routes under the `/users` path.
@@ -49,10 +21,15 @@ val users: MutableList<User> = mutableListOf(
  * @receiver The Ktor [Application] to which the routes will be added.
  */
 fun Application.registerUsersRoute() {
+
+    val repository: UserRepositoryImpl by inject<UserRepositoryImpl>()
+
+    Timber.d("registerUsersRoute() | repository: $repository")
+
     routing {
         route("/users") {
             addUserRoute()
-            getUsersRoute()
+            getUsersRoute(repository)
             getUserRoute()
             deleteUserRoute()
         }
@@ -67,6 +44,7 @@ fun Application.registerUsersRoute() {
  * @receiver The Ktor [Route] to which this endpoint will be added.
  */
 fun Route.addUserRoute() {
+
     post {
         val userRequest = call.receive<User>()
         Timber.i("Received user creation request: $userRequest")
@@ -129,8 +107,13 @@ fun Route.addUserRoute() {
  * @warning This implementation returns all user data, including hashed passwords.
  * In a production application, you must filter out sensitive data or use a DTO (Data Transfer Object).
  */
-fun Route.getUsersRoute() {
+fun Route.getUsersRoute(repository: UserRepository) {
     get("/") {
+        Timber.d("getUsersRoute() called")
+        val databaseUsers: List<User>? = repository.getUsers().first()?.also {
+            Timber.d("getUsersRoute() | database users : ${it.joinToString(",\n")} (size : ${it.size})")
+        }
+
         if (users.isEmpty()) {
             call.respond(HttpStatusCode.NotFound, "No user found")
         } else {
