@@ -58,6 +58,7 @@ ktor-server-core = { module = "io.ktor:ktor-server-core" }
 ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml-jvm" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation" }
+ktor-server-di = { module = "io.ktor:ktor-server-di" }
 ktor-server-host-common = { module = "io.ktor:ktor-server-host-common" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host-jvm" }

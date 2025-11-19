@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
@@ -11,12 +9,8 @@ plugins {
 group = "com.riders.thelabback"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
     sourceSets.all {
         languageSettings {
@@ -67,6 +61,7 @@ dependencies {
     implementation(libs.ktor.server.call.logging)
     implementation(libs.ktor.server.config.yaml)
     implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.di)
     implementation(libs.ktor.server.host.common)
     implementation(libs.ktor.utils)
 
