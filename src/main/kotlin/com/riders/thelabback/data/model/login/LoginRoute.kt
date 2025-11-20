@@ -1,8 +1,8 @@
 package com.riders.thelabback.data.model.login
 
+import com.riders.thelabback.core.utils.users
 import com.riders.thelabback.data.model.api.ApiResponse
 import com.riders.thelabback.data.model.user.User
-import com.riders.thelabback.data.model.user.users
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
